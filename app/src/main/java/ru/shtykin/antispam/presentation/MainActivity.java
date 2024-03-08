@@ -52,9 +52,12 @@ public class MainActivity extends AppCompatActivity {
         binding.buttonPermissions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    checkPermissions();
+                }
                 if (checkOverlayPermission()) {
-                    startService(new Intent(context, FloatingWindowApp.class));
-                    finish();
+
+                    Toast.makeText(MainActivity.this, "Все разрешения предоставлены", Toast.LENGTH_LONG).show();
                 } else {
                     requestFloatingWindowPermission();
                 }

@@ -1,6 +1,7 @@
 package ru.shtykin.antispam;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.telecom.Call;
@@ -18,20 +19,33 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import java.util.List;
+import java.util.Objects;
+
+import kotlin.text.Regex;
+import ru.shtykin.antispam.data.RepositoryImpl;
+import ru.shtykin.antispam.domain.Repository;
+
 public class MyCallScreeningService extends CallScreeningService {
     private ViewGroup floatView;
     private WindowManager.LayoutParams floatWindowLayoutParams;
     private int LAYOUT_TYPE;
     private WindowManager windowManager;
+
     @Override
     public void onScreenCall(@NonNull Call.Details details) {
         CallResponse.Builder response = new CallResponse.Builder();
-        Log.e("DEBUG1", "Call screening service triggered");
         String phone = details.getHandle().getSchemeSpecificPart();
         Log.e("DEBUG1", phone);
         respondToCall(details, response.build() );
 
-        Log.e("DEBUG1", "message");
+        String output;
+        try {
+            output = String.format("%s (%s) %s-%s", phone.substring(0, 2), phone.substring(2, 5), phone.substring(5, 8),
+                    phone.substring(8, 12));
+        } catch (Exception e) {
+            output = phone;
+        }
 //        WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
 //        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
 //                180, // Ширина экрана
@@ -70,11 +84,18 @@ public class MyCallScreeningService extends CallScreeningService {
 
         windowManager.addView(floatView, floatWindowLayoutParams);
 
-        Button btnClose = floatView.findViewById(R.id.btn_close);
-        TextView phoneTextView = floatView.findViewById(R.id.text_view_phone);
-        phoneTextView.setText(phone);
-        phoneTextView.setTextColor(Color.RED);
-
+        Button btnClose = floatView.findViewById(R.id.buttonClose);
+        TextView phoneTextView = floatView.findViewById(R.id.textViewPhone);
+        TextView stateTextView = floatView.findViewById(R.id.textViewState);
+        phoneTextView.setText(output);
+        if (isSpam(phone)) {
+            phoneTextView.setTextColor(getResources().getColor(R.color.red, null));
+            stateTextView.setText("Спам");
+        }
+        else {
+            phoneTextView.setTextColor(getResources().getColor(R.color.green, null));
+            stateTextView.setText("Не спам");
+        }
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,5 +103,16 @@ public class MyCallScreeningService extends CallScreeningService {
             }
         });
 
+    }
+
+    private boolean isSpam(String phone) {
+        Repository repository = new RepositoryImpl();
+        List<String> list = repository.getNumbers();
+        for (String element: list ) {
+            if (Objects.equals(element, phone)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
