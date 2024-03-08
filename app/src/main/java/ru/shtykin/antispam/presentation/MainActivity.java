@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
             stopService(new Intent(context, FloatingWindowApp.class));
         }
 
-        binding.btn.setOnClickListener(new View.OnClickListener() {
+        binding.buttonPermissions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (checkOverlayPermission()) {
@@ -111,12 +111,7 @@ public class MainActivity extends AppCompatActivity {
         return Settings.canDrawOverlays(this);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+
 
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
