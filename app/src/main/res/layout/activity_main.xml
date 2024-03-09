@@ -42,12 +42,33 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textViewRequestWindow"
+        android:layout_above="@+id/textViewContacts"
         android:gravity="center"
         android:paddingHorizontal="16dp"
         android:paddingBottom="16dp"
         android:text="Для работы предоставьте необходимые разрешения:"
         android:textSize="18.sp" />
+
+    <TextView
+        android:id="@+id/textViewContacts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonRequestContacts"
+        android:gravity="center"
+        android:paddingHorizontal="16dp"
+        android:text="Доступ к контактам, звонкам и журналу вызовов" />
+
+    <Button
+        android:id="@+id/buttonRequestContacts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textViewRequestWindow"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="24dp"
+        android:paddingHorizontal="8dp"
+        android:backgroundTint="@color/blue"
+        android:text="Предоставить доступ" />
 
     <TextView
         android:id="@+id/textViewRequestWindow"

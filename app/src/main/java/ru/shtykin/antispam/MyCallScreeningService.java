@@ -24,6 +24,7 @@ public class MyCallScreeningService extends CallScreeningService {
 
     @Override
     public void onScreenCall(@NonNull Call.Details details) {
+        if(details.getCallDirection() != Call.Details.DIRECTION_INCOMING) return;
         CallResponse.Builder response = new CallResponse.Builder();
         String phone = details.getHandle().getSchemeSpecificPart();
         respondToCall(details, response.build() );
@@ -37,7 +38,6 @@ public class MyCallScreeningService extends CallScreeningService {
         }
 
         DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
-
         int width = metrics.widthPixels;
 
         WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
